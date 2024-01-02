@@ -10,11 +10,13 @@ public final class MultipleGroupPermuterDemo {
     public static void main(String[] args) {
         List<List<Integer>> data = new ArrayList<>();
         
+        data.add(null);
         data.add(Arrays.asList(1, 2, 3));
         data.add(Arrays.asList(4));
         data.add(Arrays.asList());
-        data.add(Arrays.asList(5, 6));
+        data.add(Arrays.asList(5, 6, 7));
         data.add(Arrays.asList());
+        data.add(null);
         
         List<List<List<Integer>>> groupPemutationList = 
                 new MultipleGroupPermuter<>(data).computeGroupPermutations();

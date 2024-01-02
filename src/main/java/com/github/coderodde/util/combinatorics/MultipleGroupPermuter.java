@@ -7,13 +7,13 @@ import java.util.Objects;
 
 /**
  * This class provides a method for generating permutations over groups of 
- * elements. If the groups are {@code <1, 2>, <3, 4>, <5>}, the all permutations 
- * produced by the method {@link computeGroupPermutations} are:
+ * elements. If the groups are {@code <1, 2>, null, <3, 4>, <5>}, the all 
+ * permutations produced by the method {@link computeGroupPermutations} are:
  * <ul>
- *  <li>{@code <1, 2> <3, 4> <5>}</li>
- *  <li>{@code <1, 2> <4, 3> <5>}</li>
- *  <li>{@code <2, 1> <3, 4> <5>}</li>
- *  <li>{@code <2, 1> <4, 3> <5>}</li>
+ *  <li>{@code [1, 2] null [3, 4] [5]}</li>
+ *  <li>{@code [1, 2] null [4, 3] [5]}</li>
+ *  <li>{@code [2, 1] null [3, 4] [5]}</li>
+ *  <li>{@code [2, 1] null [4, 3] [5]}</li>
  * </ul>
  */
 public final class MultipleGroupPermuter<T> {
@@ -49,20 +49,13 @@ public final class MultipleGroupPermuter<T> {
             return new ArrayList<>(1);
         }
         
-        computeGroupPermutationsImpl(data.get(0).size(), 0);
+        computeGroupPermutationsImpl(getGroupSize(data.get(0)), 0);
         return result;
     }
     
     private void computeGroupPermutationsImpl(int n, int listIndex) {
-        // if (n == 0) {
-        //     computeGroupPermutationsImpl(data.get(listIndex + 1).size(), listIndex + 1);
-        //     return;
-        // }
         if (listIndex == data.size() - 1) {
-            if (n == 1) {
-                result.add(deepCopyGroupPermutation());
-                return;
-            } else if (n == 0) {
+            if (n == 1 || n == 0) {
                 result.add(deepCopyGroupPermutation());
                 return;
             }
@@ -82,13 +75,10 @@ public final class MultipleGroupPermuter<T> {
             computeGroupPermutationsImpl(n - 1, listIndex);
         } else {
             // Here, listIndex < data.size() - 1:
-            if (n == 1) {
-                computeGroupPermutationsImpl(data.get(listIndex + 1).size(), 
-                                             listIndex + 1);
-                return;
-            } else if (n == 0) {
-                computeGroupPermutationsImpl(data.get(listIndex + 1).size(), 
-                                             listIndex + 1);
+            if (n == 1 || n == 0) {
+                computeGroupPermutationsImpl(
+                        getGroupSize(data.get(listIndex + 1)), 
+                        listIndex + 1);
                 return;
             }
             
@@ -112,7 +102,11 @@ public final class MultipleGroupPermuter<T> {
         List<List<T>> copy = new ArrayList<>(data.size());
         
         for (List<T> group : data) {
-            copy.add(new ArrayList<>(group));
+            if (group == null) {
+                copy.add(null);
+            } else {
+                copy.add(new ArrayList<>(group));
+            }
         }
         
         return copy;
@@ -122,7 +116,9 @@ public final class MultipleGroupPermuter<T> {
         int numberOfPermutations = 1;
         
         for (List<T> group : data) {
-            numberOfPermutations *= factorial(group.size());
+            if (group != null) {
+                numberOfPermutations *= factorial(group.size());
+            }
         }
         
         return numberOfPermutations;
@@ -137,5 +133,13 @@ public final class MultipleGroupPermuter<T> {
             default:
                 return n * factorial(n - 1);
         }
+    }
+    
+    private static <T> int getGroupSize(List<T> list) {
+        if (list == null) {
+            return 0;
+        }
+        
+        return list.size();
     }
 }
