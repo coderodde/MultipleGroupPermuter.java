@@ -2,7 +2,9 @@ package com.github.coderodde.util.combinatorics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -57,5 +59,29 @@ public final class MultipleGroupPermuterTest {
         
         assertNull(permutation.get(0).get(0));
         assertNull(permutation.get(1).get(0));
+    }
+    
+    @Test
+    public void uniqueGroupPermutations() {
+        List<List<Integer>> data = new ArrayList<>();
+        List<Integer> group = Arrays.asList(1, null, null);
+        data.add(group);
+        
+        List<List<List<Integer>>> groupPermutations = 
+                new MultipleGroupPermuter<>(data).computeGroupPermutations();
+        
+        Set<List<List<Integer>>> uniqueGroupPermutations = new HashSet<>();
+        
+        for (List<List<Integer>> groupPermutation : groupPermutations) {
+            uniqueGroupPermutations.add(groupPermutation);
+        }
+        
+        assertEquals(3, uniqueGroupPermutations.size());
+        
+        List<List<Integer>>[] uniqueGroupPermutationArray = new List[3];
+        uniqueGroupPermutationArray = 
+                uniqueGroupPermutations.toArray(uniqueGroupPermutationArray);
+        
+        assertEquals(3, uniqueGroupPermutationArray.length);
     }
 }

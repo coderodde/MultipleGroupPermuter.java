@@ -33,6 +33,10 @@ import java.util.Objects;
  *  <li>{@code [null, null, 1]}</li>
  *  <li>{@code [null, null, 1]}.</li>
  * </ol>
+ * There is, however, a simple technique to mitigate the above issue: put all 
+ * the group permutations into a {@link HashSet}, and then call 
+ * {@code toArray()} on the hash set in order to obtain the unique group 
+ * permutations.
  */
 public final class MultipleGroupPermuter<T> {
 
