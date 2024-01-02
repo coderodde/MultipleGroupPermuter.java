@@ -139,6 +139,12 @@ public final class MultipleGroupPermuter<T> {
         
         for (List<T> group : data) {
             numberOfPermutations *= factorial(getGroupSize(group));
+            
+            if (numberOfPermutations <= 0) {
+                throw new IllegalArgumentException(
+                        "The current invocation would yell too many group " + 
+                                "permutations.");
+            }
         }
         
         return numberOfPermutations;
