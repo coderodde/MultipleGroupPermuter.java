@@ -116,9 +116,7 @@ public final class MultipleGroupPermuter<T> {
         int numberOfPermutations = 1;
         
         for (List<T> group : data) {
-            if (group != null) {
-                numberOfPermutations *= factorial(group.size());
-            }
+            numberOfPermutations *= factorial(getGroupSize(group));
         }
         
         return numberOfPermutations;
