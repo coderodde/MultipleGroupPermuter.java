@@ -37,6 +37,8 @@ import java.util.Objects;
  * the group permutations into a {@link HashSet}, and then call 
  * {@code toArray()} on the hash set in order to obtain the unique group 
  * permutations.
+ * 
+ * @param <T> the type of the group element.
  */
 public final class MultipleGroupPermuter<T> {
 
