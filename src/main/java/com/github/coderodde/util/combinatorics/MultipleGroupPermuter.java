@@ -30,7 +30,7 @@ public final class MultipleGroupPermuter<T> {
      */
     public MultipleGroupPermuter(List<List<T>> groupList) {
         Objects.requireNonNull(groupList, "The input group list is null.");
-        this.data = validateData(groupList);
+        this.data = groupList;
         this.result = new ArrayList<>(getNumberOfResultPermutations());
     }
     
@@ -43,6 +43,8 @@ public final class MultipleGroupPermuter<T> {
      * @return the list of all the group permutations.
      */
     public List<List<List<T>>> computeGroupPermutations() {
+        Objects.requireNonNull(data, "The input data is null.");
+        
         if (data.isEmpty()) {
             return new ArrayList<>(1);
         }
@@ -58,6 +60,9 @@ public final class MultipleGroupPermuter<T> {
         // }
         if (listIndex == data.size() - 1) {
             if (n == 1) {
+                result.add(deepCopyGroupPermutation());
+                return;
+            } else if (n == 0) {
                 result.add(deepCopyGroupPermutation());
                 return;
             }
@@ -80,7 +85,10 @@ public final class MultipleGroupPermuter<T> {
             if (n == 1) {
                 computeGroupPermutationsImpl(data.get(listIndex + 1).size(), 
                                              listIndex + 1);
-                
+                return;
+            } else if (n == 0) {
+                computeGroupPermutationsImpl(data.get(listIndex + 1).size(), 
+                                             listIndex + 1);
                 return;
             }
             
@@ -129,26 +137,5 @@ public final class MultipleGroupPermuter<T> {
             default:
                 return n * factorial(n - 1);
         }
-    }
-    
-    private List<List<T>> validateData(List<List<T>> data) {
-        int index = 0;
-        
-        for (List<T> group : data) {
-            Objects.requireNonNull(
-                    group, 
-                    String.format("The group at index %d is null.", index));
-            
-            index++;
-            
-            if (group.isEmpty()) {
-                throw new IllegalArgumentException(
-                        "Objects of " 
-                                + getClass() 
-                                + " cannot deal with empty groups.");
-            }
-        }
-        
-        return data;
     }
 }

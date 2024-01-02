@@ -12,7 +12,9 @@ public final class MultipleGroupPermuterDemo {
         
         data.add(Arrays.asList(1, 2, 3));
         data.add(Arrays.asList(4));
+        data.add(Arrays.asList());
         data.add(Arrays.asList(5, 6));
+        data.add(Arrays.asList());
         
         List<List<List<Integer>>> groupPemutationList = 
                 new MultipleGroupPermuter<>(data).computeGroupPermutations();
