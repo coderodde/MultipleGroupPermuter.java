@@ -2,8 +2,10 @@ package com.github.coderodde.util.combinatorics;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public final class MultipleGroupPermuterDemo {
     
@@ -14,7 +16,7 @@ public final class MultipleGroupPermuterDemo {
         data.add(Arrays.asList(1, 2, 3));
         data.add(Arrays.asList(4));
         data.add(Arrays.asList());
-        data.add(Arrays.asList(5, 6, 7));
+        data.add(Arrays.asList(5, 6, 7, 8));
         data.add(Arrays.asList());
         data.add(null);
         
@@ -23,6 +25,16 @@ public final class MultipleGroupPermuterDemo {
         
         System.out.println(
                 convertGroupPemutationsToString(groupPemutationList));
+        
+        Set<List<List<Integer>>> groupPermutationSet = 
+                new HashSet<>(groupPemutationList.size());
+        
+        for (List<List<Integer>> groupPermutation : groupPemutationList) {
+            groupPermutationSet.add(groupPermutation);
+        }
+        
+        System.out.println(
+                "Distinct group permutations: " + groupPermutationSet.size());
     }
     
     private static <T> String 
