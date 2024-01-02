@@ -17,7 +17,7 @@ public final class MultipleGroupPermuterDemo {
         data.add(Arrays.asList(1, 2, 3));
         data.add(Arrays.asList(4));
         data.add(Arrays.asList());
-        data.add(Arrays.asList(null, 6, null, 5));
+        data.add(Arrays.asList(null, 6, 7, 5));
         data.add(Arrays.asList());
         data.add(null);
         
