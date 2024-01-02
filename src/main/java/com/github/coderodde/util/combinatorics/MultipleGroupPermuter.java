@@ -14,7 +14,25 @@ import java.util.Objects;
  *  <li>{@code [1, 2] null [4, 3] [5]}</li>
  *  <li>{@code [2, 1] null [3, 4] [5]}</li>
  *  <li>{@code [2, 1] null [4, 3] [5]}</li>
+ * </ul>.
+ * <p>
+ * Unfortunately, this permuter cannot "collapse" equal group permutation in
+ * case some groups have equal elements. For example, {@code <null, 1, null>}
+ * won't produce 
+ * <ul>
+ *  <li>{@code [1, null, null]}</li>
+ *  <li>{@code [null, 1, null]}</li>
+ *  <li>{@code [null, null, 1]},</li>
  * </ul>
+ * but instead
+ * <ol>
+ *  <li>{@code [1, null, null]}</li>
+ *  <li>{@code [1, null, null]}</li>
+ *  <li>{@code [null, 1, null]}</li>
+ *  <li>{@code [null, 1, null]}</li>
+ *  <li>{@code [null, null, 1]}</li>
+ *  <li>{@code [null, null, 1]}.</li>
+ * </ol>
  */
 public final class MultipleGroupPermuter<T> {
 
