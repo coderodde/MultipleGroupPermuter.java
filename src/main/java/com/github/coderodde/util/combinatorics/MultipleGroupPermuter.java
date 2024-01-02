@@ -21,8 +21,7 @@ public final class MultipleGroupPermuter<T> {
     // The actual group list. Will be modified by the computeGroupPermutations 
     // method.
     private final List<List<T>> data;
-    private final List<List<List<T>>> result =
-            new ArrayList<>(getNumberOfResultPermutations());
+    private final List<List<List<T>>> result;
     
     /**
      * Constructs this object with a given group list.
@@ -32,6 +31,7 @@ public final class MultipleGroupPermuter<T> {
     public MultipleGroupPermuter(List<List<T>> groupList) {
         Objects.requireNonNull(groupList, "The input group list is null.");
         this.data = validateData(groupList);
+        this.result = new ArrayList<>(getNumberOfResultPermutations());
     }
     
     /**
