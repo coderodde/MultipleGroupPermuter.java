@@ -134,10 +134,6 @@ public final class MultipleGroupPermuter<T> {
     }
     
     private static <T> int getGroupSize(List<T> list) {
-        if (list == null) {
-            return 0;
-        }
-        
-        return list.size();
+        return list == null ? 0 : list.size();
     }
 }
