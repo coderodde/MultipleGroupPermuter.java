@@ -8,8 +8,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * This class implements the demonstration of
+ * {@link com.github.coderodde.util.combinatorics.MultipleGroupPermuter}.
+ */
 public final class MultipleGroupPermuterDemo {
     
+    /**
+     * The entry point of the demonstration.
+     * 
+     * @param args command line arguments, ignored.
+     */
     public static void main(String[] args) {
         List<List<Integer>> data = new ArrayList<>();
         

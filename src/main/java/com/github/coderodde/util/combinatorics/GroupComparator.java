@@ -14,6 +14,11 @@ public final class GroupComparator<T> implements Comparator<List<T>> {
 
     private final Comparator<T> elementComparator;
     
+    /**
+     * Constructs a new group comparator.
+     * 
+     * @param elementComparator the element comparator. 
+     */
     public GroupComparator(Comparator<T> elementComparator) {
         this.elementComparator = elementComparator;
     }

@@ -15,6 +15,11 @@ public final class GroupPermutationComparator<T>
     
     private final Comparator<List<T>> groupComparator;
     
+    /**
+     * Constructs a new group permutation comparator.
+     * 
+     * @param groupComparator the group comparator. 
+     */
     public GroupPermutationComparator(Comparator<List<T>> groupComparator) {
         this.groupComparator = groupComparator;
     }
