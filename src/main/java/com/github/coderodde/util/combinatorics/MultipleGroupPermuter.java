@@ -34,8 +34,8 @@ import java.util.Objects;
  *  <li>{@code [null, null, 1]}.</li>
  * </ol>
  * There is, however, a simple technique to mitigate the above issue: put all 
- * the group permutations into a {@link HashSet}, and then call 
- * {@code toArray()} on the hash set in order to obtain the unique group 
+ * the group permutations into a {@link java.util.HashSet}, and then call 
+ * {@link java.util.HashSet#toArray()}on the hash set in order to obtain the unique group 
  * permutations.
  * 
  * @param <T> the type of the group element.
