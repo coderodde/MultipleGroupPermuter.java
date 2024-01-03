@@ -144,7 +144,7 @@ public final class MultipleGroupPermuter<T> {
             
             if (numberOfPermutations <= 0) {
                 throw new IllegalArgumentException(
-                        "The current invocation would yell too many group " + 
+                        "The current invocation would yield too many group " + 
                                 "permutations.");
             }
         }
