@@ -3,11 +3,10 @@ package com.github.coderodde.util.combinatorics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 public final class MultipleGroupPermuterDemo {
     
@@ -18,39 +17,80 @@ public final class MultipleGroupPermuterDemo {
         data.add(Arrays.asList(1, 2, 3));
         data.add(Arrays.asList(4));
         data.add(Arrays.asList());
-        data.add(Arrays.asList(5, 6, null, 8));
+        data.add(Arrays.asList(null, 6, 7, 5));
         data.add(Arrays.asList());
         data.add(null);
         
+        // Make sure 'data' remains intact since the permuter modifies the order
+        // of elements in the input data:
+        List<List<Integer>> dataCopy = copyData(data);
+        
+        // Compute all the group permutations:
         List<List<List<Integer>>> groupPemutationList = 
-                new MultipleGroupPermuter<>(data).computeGroupPermutations();
+                new MultipleGroupPermuter<>(dataCopy)
+                        .computeGroupPermutations();
         
-        GroupComparator<Integer> groupComparator = 
-                new GroupComparator<>(Integer::compareTo);
+        // Put all the group permutations into lexicographic order:
+        sort(groupPemutationList);
         
-        GroupPermutationComparator<Integer> groupPermutationComparator = 
-                new GroupPermutationComparator<>(groupComparator);
-        
-        Collections.sort(groupPemutationList,
-                         groupPermutationComparator);
-        
+        // Print all the group permutations in lexicographic order:
         System.out.println(
                 convertGroupPemutationsToString(groupPemutationList));
         
-        Set<List<List<Integer>>> groupPermutationSet = 
-                new HashSet<>(groupPemutationList.size());
+        // Build the map mapping each unique group permutations to its 
+        // multiplicity:
+        Map<List<List<Integer>>, Integer> frequencyMap = 
+                new HashMap<>(groupPemutationList.size());
         
         for (List<List<Integer>> groupPermutation : groupPemutationList) {
-            groupPermutationSet.add(groupPermutation);
+            frequencyMap.put(groupPermutation, 
+                             frequencyMap.getOrDefault(
+                                     groupPermutation, 
+                                     0) + 1);
         }
         
         System.out.println(
-                "Distinct group permutations: " + groupPermutationSet.size());
+                "Distinct group permutations: " + frequencyMap.size());
+        
+        System.out.println(
+                "Total group permutations: " 
+                        + countAllPermutations(frequencyMap));
     }
     
+    /**
+     * Counts the total number of group permutations stored in the 
+     * {@code frequencyMap}.
+     * 
+     * @param <T>          the element type of groups.
+     * @param frequencyMap the map mapping each unique group permutation to its
+     *                     multiplicity.
+     * 
+     * @return the total number of group permutations.
+     */
+    private static <T> int 
+        countAllPermutations(Map<List<List<T>>, Integer> frequencyMap) {
+            
+        int numberOfAllPermutations = 0;
+        
+        for (Integer count : frequencyMap.values()) {
+            numberOfAllPermutations += count;
+        }
+        
+        return numberOfAllPermutations;
+    }
+        
+    /**
+     * Computes the string representing the input group permutations.
+     * 
+     * @param <T>                  the element type of groups.
+     * @param groupPermutationList the list of group permutations.
+     * @return                     the string describing all the group 
+     *                             permutations.
+     */   
     private static <T> String 
         convertGroupPemutationsToString(
                 List<List<List<T>>> groupPermutationList) {
+            
         StringBuilder stringBuilder = new StringBuilder();
         boolean first = true;
         int numberOfGroupPemutations = groupPermutationList.size();
@@ -80,6 +120,13 @@ public final class MultipleGroupPermuterDemo {
         return stringBuilder.toString();
     }
         
+    /**
+     * Returns the string representing the input of a single group permutation.
+     * 
+     * @param <T>             the element type of groups.
+     * @param groupPemutation the input group permutation.
+     * @return                the string representing the input group.
+     */
     private static <T> String 
         convertGroupPemutationToString(List<List<T>> groupPemutation) {
             
@@ -98,83 +145,44 @@ public final class MultipleGroupPermuterDemo {
        
        return stringBuilder.toString();
     }
-}
-
-class GroupComparator<T> implements Comparator<List<T>> {
-
-    private final Comparator<T> elementComparator;
-    
-    GroupComparator(Comparator<T> elementComparator) {
-        this.elementComparator = elementComparator;
-    }
-    
-    @Override
-    public int compare(List<T> group1, List<T> group2) {
-        if (group1 == null) {
-            if (group2 == null) {
-                return 0;
+        
+    /**
+     * Returns the deep copy of {@code data}. We need this in order to keep the
+     * actual data for the permuter intact.
+     * 
+     * @param <T>  the element type of groups.
+     * @param data the data to deep copy.
+     * @return     the deep copy of the input data.
+     */     
+    private static <T> List<List<T>> copyData(List<List<T>> data) {
+        List<List<T>> deepCopy = new ArrayList<>(data.size());
+        
+        for (List<T> list : data) {
+            if (list == null) {
+                deepCopy.add(null);
             } else {
-                return -1;
-            }
-        } else {
-            // Here, group1 != null:
-            if (group2 == null) {
-                return 1;
+                deepCopy.add(new ArrayList<>(list));
             }
         }
         
-        // Here, group1 != null and group2 != null:
-        for (int i = 0; i < group1.size(); i++) {
-            T element1 = group1.get(i);
-            T element2 = group2.get(i);
-            
-            if (element1 == null) {
-                if (element2 == null) {
-                    return 0;
-                } else {
-                    return -1;
-                }
-            } else {
-                // Here, element1 != null:
-                if (element2 == null) {
-                    return 1;
-                }
-            }
-            
-            int cmp = elementComparator.compare(element1, element2);
-            
-            if (cmp != 0) {
-                return cmp;
-            }
-        }
-        
-        return 0;
-    }
-}
-
-class GroupPermutationComparator<T> implements Comparator<List<List<T>>> {
-    
-    private final Comparator<List<T>> groupComparator;
-    
-    GroupPermutationComparator(Comparator<List<T>> groupComparator) {
-        this.groupComparator = groupComparator;
+        return deepCopy;
     }
     
-    @Override
-    public int compare(List<List<T>> groupPermutation1,
-                       List<List<T>> groupPermutation2) {
+    /**
+     * Sorts the input group permutation list into lexicographic order. Note
+     * that this sort routine deems {@code null} values less than any other
+     * non-null integer.
+     * 
+     * @param groupPermutationList the list of all the group permutations.
+     */
+    private static void sort(List<List<List<Integer>>> groupPermutationList) {
         
-        for (int i = 0; i < groupPermutation1.size(); i++) {
-            List<T> group1 = groupPermutation1.get(i);
-            List<T> group2 = groupPermutation2.get(i);
-            
-            int cmp = groupComparator.compare(group1, group2);
-            
-            if (cmp != 0) {
-                return cmp;
-            }
-        }
+        GroupComparator<Integer> groupComparator = 
+                new GroupComparator<>(Integer::compareTo);
         
-        return 0;
+        GroupPermutationComparator<Integer> groupPermutationComparator = 
+                new GroupPermutationComparator<>(groupComparator);
+        
+        Collections.sort(groupPermutationList, groupPermutationComparator);
     }
 }

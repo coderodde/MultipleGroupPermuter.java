@@ -14,7 +14,31 @@ import java.util.Objects;
  *  <li>{@code [1, 2] null [4, 3] [5]}</li>
  *  <li>{@code [2, 1] null [3, 4] [5]}</li>
  *  <li>{@code [2, 1] null [4, 3] [5]}</li>
+ * </ul>.
+ * <p>
+ * Unfortunately, this permuter cannot "collapse" equal group permutation in
+ * case some groups have equal elements. For example, {@code <null, 1, null>}
+ * won't produce 
+ * <ul>
+ *  <li>{@code [1, null, null]}</li>
+ *  <li>{@code [null, 1, null]}</li>
+ *  <li>{@code [null, null, 1]},</li>
  * </ul>
+ * but instead
+ * <ol>
+ *  <li>{@code [1, null, null]}</li>
+ *  <li>{@code [1, null, null]}</li>
+ *  <li>{@code [null, 1, null]}</li>
+ *  <li>{@code [null, 1, null]}</li>
+ *  <li>{@code [null, null, 1]}</li>
+ *  <li>{@code [null, null, 1]}.</li>
+ * </ol>
+ * There is, however, a simple technique to mitigate the above issue: put all 
+ * the group permutations into a {@link HashSet}, and then call 
+ * {@code toArray()} on the hash set in order to obtain the unique group 
+ * permutations.
+ * 
+ * @param <T> the type of the group element.
  */
 public final class MultipleGroupPermuter<T> {
 
@@ -117,6 +141,12 @@ public final class MultipleGroupPermuter<T> {
         
         for (List<T> group : data) {
             numberOfPermutations *= factorial(getGroupSize(group));
+            
+            if (numberOfPermutations <= 0) {
+                throw new IllegalArgumentException(
+                        "The current invocation would yell too many group " + 
+                                "permutations.");
+            }
         }
         
         return numberOfPermutations;
